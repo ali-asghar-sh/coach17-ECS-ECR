@@ -5,14 +5,27 @@ resource "aws_ecr_repository" "ecr" {
 
 module "ecs" {
   source  = "terraform-aws-modules/ecs/aws"
-  version = "~> 5.9.0"
+  version = "~> 6.1.0"
 
   cluster_name = "${local.prefix}-ecs"
-  fargate_capacity_providers = {
-    FARGATE = {
-      default_capacity_provider_strategy = {
-        weight = 100
+
+  cluster_configuration = {
+    execute_command_configuration = {
+      logging = "OVERRIDE"
+      log_configuration = {
+        cloud_watch_log_group_name = "/aws/ecs/aws-ec2"
       }
+    }
+  }
+
+  # Cluster capacity providers
+  default_capacity_provider_strategy = {
+    FARGATE = {
+      weight = 100
+      base   = 20
+    }
+    FARGATE_SPOT = {
+      weight = 100
     }
   }
 
@@ -34,8 +47,8 @@ module "ecs" {
       }
       assign_public_ip                   = true
       deployment_minimum_healthy_percent = 100
-      subnet_ids                         = [] #List of subnet IDs to use for your tasks
-      security_group_ids                 = [] #Create a SG resource and pass it here
+      subnet_ids                         = module.vpc.public_subnets #List of subnet IDs to use for your tasks
+      security_group_ids                 = allow_tls.id              #Create a SG resource and pass it here
     }
   }
 }
