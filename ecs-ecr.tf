@@ -5,7 +5,7 @@ resource "aws_ecr_repository" "ecr" {
 
 module "ecs" {
   source  = "terraform-aws-modules/ecs/aws"
-  version = "~> 5.9.0"
+  version = "~> 5.0"
 
   cluster_name = "${local.prefix}-ecs"
   fargate_capacity_providers = {
