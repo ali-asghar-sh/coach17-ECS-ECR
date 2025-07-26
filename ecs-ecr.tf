@@ -8,11 +8,24 @@ module "ecs" {
   version = "~> 6.1.0"
 
   cluster_name = "${local.prefix}-ecs"
-  fargate_capacity_providers = {
-    FARGATE = {
-      default_capacity_provider_strategy = {
-        weight = 100
+
+  cluster_configuration = {
+    execute_command_configuration = {
+      logging = "OVERRIDE"
+      log_configuration = {
+        cloud_watch_log_group_name = "/aws/ecs/aws-ec2"
       }
+    }
+  }
+
+  # Cluster capacity providers
+  default_capacity_provider_strategy = {
+    FARGATE = {
+      weight = 100
+      base   = 20
+    }
+    FARGATE_SPOT = {
+      weight = 100
     }
   }
 
