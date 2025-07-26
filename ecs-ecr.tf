@@ -35,7 +35,7 @@ module "ecs" {
       assign_public_ip                   = true
       deployment_minimum_healthy_percent = 100
       subnet_ids                         = module.vpc.public_subnets #List of subnet IDs to use for your tasks
-      security_group_ids                 = allow_tls.id #Create a SG resource and pass it here
+      security_group_ids                 = allow_tls.id              #Create a SG resource and pass it here
     }
   }
 }
