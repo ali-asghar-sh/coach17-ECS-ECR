@@ -13,4 +13,6 @@ output "caller_user" {
 }
 
 
+
+
 data "aws_region" "current" {} # Fetches current AWS region
